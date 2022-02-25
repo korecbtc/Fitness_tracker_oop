@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Any, Dict, List
 from dataclasses import asdict, dataclass
 
 
@@ -6,10 +6,10 @@ from dataclasses import asdict, dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     training_type: str
-    duration_h: float
-    distance_km: float
-    speed_kmph: float
-    calories_kc: float
+    duration: float
+    distance: float
+    speed: float
+    calories: float
     MESSAGE: str = ('Тип тренировки: {}; '
                     'Длительность: {:0.3f} ч.; '
                     'Дистанция: {:0.3f} км; '
@@ -149,13 +149,13 @@ def read_package(workout_type: str, data: List[float]) -> Training:
     }
     if workout_type not in type_training:
         raise ValueError("Не правильный код тренировки.")
-    obj_training: Training = type_training[workout_type](*data)
+    obj_training: Any = type_training[workout_type](*data)
     return obj_training
 
 
 def main(training: Training) -> None:
     """Главная функция."""
-    info: Training = training.show_training_info()
+    info: Any = training.show_training_info()
     print(info.get_message())
 
 
