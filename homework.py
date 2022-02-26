@@ -10,15 +10,15 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
-    MESSAGE: str = ('Тип тренировки: {}; '
-                    'Длительность: {:0.3f} ч.; '
-                    'Дистанция: {:0.3f} км; '
-                    'Ср. скорость: {:0.3f} км/ч; '
-                    'Потрачено ккал: {:0.3f}.')
+    MESSAGE: str = ('Тип тренировки: {training_type}; '
+                    'Длительность: {duration:0.3f} ч.; '
+                    'Дистанция: {distance:0.3f} км; '
+                    'Ср. скорость: {speed:0.3f} км/ч; '
+                    'Потрачено ккал: {calories:0.3f}.')
 
     def get_message(self) -> str:
         """Возвращаю сообщение."""
-        return self.MESSAGE.format(*asdict(self).values())
+        return self.MESSAGE.format(**asdict(self))
 
 
 class Training:
@@ -68,15 +68,17 @@ class Training:
 class Running(Training):
     """Тренировка: бег."""
     CALORIES_MEAN_SPEED_MULTIPLE: float = 18
-    CALORIES_MEAN_SPEED_MULTIPLE_SHIFT: float = 20
+    CALORIES_MEAN_SPEED_SHIFT: float = 20
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
         duration_m: float = self.MIN_IN_HOUR * self.duration
         spent_calories_kc: float = (
-            self.CALORIES_MEAN_SPEED_MULTIPLE * super().get_mean_speed() - (
-                self.CALORIES_MEAN_SPEED_MULTIPLE_SHIFT)) * self.weight / (
-                    self.M_IN_KM) * duration_m
+            (
+                self.CALORIES_MEAN_SPEED_MULTIPLE * self.get_mean_speed() - (
+                    self.CALORIES_MEAN_SPEED_SHIFT)
+            ) * self.weight / self.M_IN_KM * duration_m
+        )
         return spent_calories_kc
 
 
@@ -100,7 +102,7 @@ class SportsWalking(Training):
         duration_min: float = self.MIN_IN_HOUR * self.duration
         spent_calories_kc: float = (
             self.CALORIES_WEIGHT_MULTIPLE_FIRST * self.weight + (
-                super().get_mean_speed() ** 2 // self.height) * (
+                self.get_mean_speed() ** 2 // self.height) * (
                 self.CALORIES_WEIGHT_MULTIPLE_SECOND) * (self.weight)
         ) * duration_min
         return spent_calories_kc
