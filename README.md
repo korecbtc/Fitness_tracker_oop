@@ -23,7 +23,7 @@
 
  - Клонируйте репозиторий:
 
-   git clone git@github.com:korecbtc/Fitness_tracker_oop.git
+   git clone git@github.com:korecbtc/fitness_tracker_oop.git
 
  - Перейдите в папку с проектом:
 
